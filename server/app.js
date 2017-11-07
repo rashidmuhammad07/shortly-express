@@ -78,6 +78,22 @@ app.post('/links',
 // Write your authentication routes here
 /************************************************************/
 
+app.post('/signup', (req, res, next) => {
+ // console.log('testfile input: ', req.body);
+  var userName = req.body.username;
+  var password = req.body.password;
+
+  return models.Users.create({username: userName, password: password})
+    .then(data => {
+      // console.log('Users.create successful', typeof data);
+      res.status(201).send(data);
+    })
+    .error(error => {
+      // console.log('Users.create error');
+      res.status(500).send(error);
+    });
+  // console.log('trying to create a user: ', createUser);
+});
 
 
 /************************************************************/
