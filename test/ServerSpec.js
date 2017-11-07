@@ -13,7 +13,7 @@ var port = 4568;
 // Remove the 'x' from beforeEach block when working on
 // authentication tests.
 /************************************************************/
-var xbeforeEach = function() {};
+var xbeforeEach = function() { };
 /************************************************************/
 
 
@@ -43,14 +43,17 @@ describe('', function() {
       password: 'student',
       database: 'shortly'
     });
-
+    //xconsole.log('before db: ', db);
     /**************************************************************************************/
     /* TODO: If you create a new MySQL tables, add it to the tablenames collection below. */
     /**************************************************************************************/
     var tablenames = ['links', 'clicks', 'users', 'sessions'];
 
     db.connect(function(err) {
-      if (err) { return done(err); }
+      if (err) { 
+        console.log(err);
+        return done(err); 
+      }
       /* Empties the db table before each test so that multiple tests
        * (or repeated runs of the tests) won't screw each other up: */
       clearDB(db, tablenames, function() {
@@ -63,6 +66,7 @@ describe('', function() {
 
   describe('Database Schema:', function() {
     it('contains a users table', function(done) {
+      //console.log(db);
       var queryString = 'SELECT * FROM users';
       db.query(queryString, function(err, results) {
         if (err) { return done(err); }
@@ -123,7 +127,7 @@ describe('', function() {
     });
   });
 
-  xdescribe('Account Creation:', function() {
+  describe('Account Creation:', function() {
 
     it('signup creates a new user record', function(done) {
       var options = {
@@ -139,6 +143,8 @@ describe('', function() {
         var queryString = 'SELECT * FROM users where username = "Samantha"';
         db.query(queryString, function(err, rows) {
           if (err) { done(err); }
+// console.log('rows', rows);
+// console.log(db);
           var user = rows[0];
           expect(user).to.exist;
           expect(user.username).to.equal('Samantha');
@@ -208,7 +214,7 @@ describe('', function() {
     });
   });
 
-  xdescribe('Account Login:', function() {
+  describe('Account Login:', function() {
 
     beforeEach(function(done) {
       var options = {
@@ -277,7 +283,7 @@ describe('', function() {
     });
   });
 
-  xdescribe('Sessions Schema:', function() {
+  describe('Sessions Schema:', function() {
     it('contains a sessions table', function(done) {
       var queryString = 'SELECT * FROM sessions';
       db.query(queryString, function(err, results) {
@@ -325,7 +331,7 @@ describe('', function() {
     });
   });
 
-  xdescribe('Express Middleware', function() {
+  describe('Express Middleware', function() {
     var cookieParser = require('../server/middleware/cookieParser.js');
     var createSession = require('../server/middleware/auth.js').createSession;
 
