@@ -80,19 +80,46 @@ app.post('/links',
 
 app.post('/signup', (req, res, next) => {
  // console.log('testfile input: ', req.body);
-  var userName = req.body.username;
+  var username = req.body.username;
   var password = req.body.password;
 
-  return models.Users.create({username: userName, password: password})
+  return models.Users.create({username: username, password: password})
     .then(data => {
+      
       // console.log('Users.create successful', typeof data);
-      res.status(201).send(data);
+      res.redirect(201, '/'); 
+      //res.status(201).send(data);
     })
     .error(error => {
-      // console.log('Users.create error');
-      res.status(500).send(error);
+      //console.log('Users.create error', error);
+      if (error.code === 'ER_DUP_ENTRY') {
+        res.redirect(409, '/signup');  
+      } else {
+        res.status(500).send(error);
+      }
     });
   // console.log('trying to create a user: ', createUser);
+});
+
+
+app.post('/login', (req, res, next) => {
+  var username = req.body.username;
+  var password = req.body.password;
+
+  return models.Users.get({ username: username })
+    .then(data => {
+      return models.Users.compare(password, data.password, data.salt);
+    })
+    .then(isMatch => {
+      if (isMatch) {
+        res.redirect(200, '/');
+      } else {
+        res.redirect(401, '/login');
+      }
+    })
+    .catch(err => {
+      res.redirect(401, '/login');
+    });
 });
 
 
