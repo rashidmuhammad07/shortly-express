@@ -8,7 +8,6 @@ const parseCookies = (req, res, next) => {
       obj[eachCookieArr[0].trim()] = eachCookieArr[1].trim(); 
     }
   }
-
   req.cookies = obj;
   next();
 };
